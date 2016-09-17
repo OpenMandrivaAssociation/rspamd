@@ -19,6 +19,7 @@ BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libpcre)
+BuildRequires:  pkgconfig(lua)
 BuildRequires:  cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
@@ -27,7 +28,6 @@ BuildRequires:	pkgconfig(gmime-2.6)
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:	ninja
 Requires(pre,postun):  rpm-helper
-BuildRequires:  pkgconfig(luajit)
 Source0:	https://rspamd.com/downloads/%{name}-%{version}.tar.xz
 Patch1:		rspamd-1.3.5-clang.patch
 Patch2:		rspamd-1.3.5-openssl-1.1.patch
