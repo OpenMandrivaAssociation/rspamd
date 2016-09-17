@@ -57,7 +57,7 @@ lua.
 	-DLOGDIR=%{_localstatedir}/log/rspamd \
 	-DEXAMPLESDIR=%{_datadir}/examples/rspamd \
 	-DPLUGINSDIR=%{_datadir}/rspamd \
-	-DLIBDIR=%{_libdir}/rspamd/ \
+	-DLIBDIR=%{_libdir} \
 	-DINCLUDEDIR=%{_includedir} \
 	-DNO_SHARED=ON \
 	-DDEBIAN_BUILD=1 \
@@ -73,6 +73,8 @@ DESTDIR=%{buildroot} INSTALLDIRS=vendor ninja install
 %{__install} -d -p -m 0755 %{buildroot}%{rspamd_home}
 %{__install} -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/local.d/
 %{__install} -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/override.d/
+
+sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.service
 
 %pre
 %_pre_useradd %{rspamd_user} %{rspamd_home} /sbin/nologin
@@ -116,7 +118,6 @@ DESTDIR=%{buildroot} INSTALLDIRS=vendor ninja install
 %dir %{rspamd_pluginsdir}/lua
 %dir %{rspamd_pluginsdir}
 %dir %{rspamd_wwwdir}
-%dir %{_libdir}/rspamd
 %config(noreplace) %{rspamd_confdir}/2tld.inc
 %config(noreplace) %{rspamd_confdir}/surbl-whitelist.inc
 %config(noreplace) %{rspamd_confdir}/spf_dkim_whitelist.inc
@@ -125,5 +126,5 @@ DESTDIR=%{buildroot} INSTALLDIRS=vendor ninja install
 %{rspamd_rulesdir}/regexp/*.lua
 %{rspamd_rulesdir}/*.lua
 %{rspamd_wwwdir}/*
-%{_libdir}/rspamd/*
+%{_libdir}/*.so
 %{_datadir}/rspamd/effective_tld_names.dat
