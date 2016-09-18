@@ -31,6 +31,7 @@ Requires(pre,postun):  rpm-helper
 Source0:	https://rspamd.com/downloads/%{name}-%{version}.tar.xz
 Patch1:		rspamd-1.3.5-clang.patch
 Patch2:		rspamd-1.3.5-openssl-1.1.patch
+Requires:	lua-lpeg
 
 %description
 Rspamd is a rapid, modular and lightweight spam filter. It is designed to work
