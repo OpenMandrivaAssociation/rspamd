@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.3.5
+Version:	1.4.0
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -30,7 +30,7 @@ BuildRequires:	ninja
 Requires(pre,postun):  rpm-helper
 Source0:	https://rspamd.com/downloads/%{name}-%{version}.tar.xz
 Patch1:		rspamd-1.3.5-clang.patch
-Patch2:		rspamd-1.3.5-openssl-1.1.patch
+#Patch2:		rspamd-1.3.5-openssl-1.1.patch
 Requires:	lua-lpeg
 
 %description
@@ -96,7 +96,9 @@ sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.ser
 %config(noreplace) %{rspamd_confdir}/%{name}.conf
 %config(noreplace) %{rspamd_confdir}/%{name}.sysvinit.conf
 %config(noreplace) %{rspamd_confdir}/composites.conf
+%config(noreplace) %{rspamd_confdir}/maillist.inc
 %config(noreplace) %{rspamd_confdir}/metrics.conf
+%config(noreplace) %{rspamd_confdir}/mid.inc
 %config(noreplace) %{rspamd_confdir}/mime_types.inc
 %config(noreplace) %{rspamd_confdir}/modules.conf
 %config(noreplace) %{rspamd_confdir}/statistic.conf
