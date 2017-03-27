@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.4.1
+Version:	1.5.3
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -20,11 +20,12 @@ BuildRequires:	pkgconfig(libcrypto)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:  pkgconfig(lua)
+BuildRequires:	pkgconfig(fann)
+BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:  cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
 BuildRequires:	ragel
-BuildRequires:	pkgconfig(gmime-2.6)
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:	ninja
 Requires(pre,postun):  rpm-helper
