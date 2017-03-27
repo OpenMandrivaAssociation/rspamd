@@ -22,6 +22,7 @@ BuildRequires:	pkgconfig(libpcre)
 BuildRequires:  pkgconfig(lua)
 BuildRequires:	pkgconfig(fann)
 BuildRequires:	pkgconfig(icu-i18n)
+BuildRequires:	pkgconfig(gdlib)
 BuildRequires:  cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
