@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.5.3
+Version:	1.5.9
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -30,8 +30,7 @@ BuildRequires:	ragel
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:	ninja
 Requires(pre,postun):  rpm-helper
-Source0:	https://rspamd.com/downloads/%{name}-%{version}.tar.xz
-Patch1:		rspamd-1.3.5-clang.patch
+Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 #Patch2:		rspamd-1.3.5-openssl-1.1.patch
 Requires:	lua-lpeg
 
