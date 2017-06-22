@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.5.9
+Version:	1.6.0
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -95,7 +95,6 @@ sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.ser
 %{_bindir}/rspamc
 %{_bindir}/rspamadm
 %config(noreplace) %{rspamd_confdir}/%{name}.conf
-%config(noreplace) %{rspamd_confdir}/%{name}.sysvinit.conf
 %config(noreplace) %{rspamd_confdir}/composites.conf
 %config(noreplace) %{rspamd_confdir}/maillist.inc
 %config(noreplace) %{rspamd_confdir}/metrics.conf
@@ -110,8 +109,8 @@ sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.ser
 %config(noreplace) %{rspamd_confdir}/worker-controller.inc
 %config(noreplace) %{rspamd_confdir}/worker-fuzzy.inc
 %config(noreplace) %{rspamd_confdir}/worker-normal.inc
+%config(noreplace) %{rspamd_confdir}/worker-proxy.inc
 %config(noreplace) %{rspamd_confdir}/modules.d/*
-%config(noreplace) %{rspamd_confdir}/rspamd.systemd.conf
 %attr(-,%{rspamd_user},%{rspamd_user}) %dir %{rspamd_home}
 %dir %{rspamd_rulesdir}/regexp
 %dir %{rspamd_rulesdir}
@@ -132,3 +131,4 @@ sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.ser
 %{rspamd_wwwdir}/*
 %{_libdir}/*.so
 %{_datadir}/rspamd/effective_tld_names.dat
+%{_datadir}/rspamd/lib
