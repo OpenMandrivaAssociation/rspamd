@@ -9,7 +9,7 @@
 
 Name:		rspamd
 Version:	1.6.5
-Release:	1
+Release:	2
 Summary:	Rapid spam filtering system
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -31,7 +31,8 @@ BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:	ninja
 Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
-#Patch2:		rspamd-1.3.5-openssl-1.1.patch
+Patch0:		rspamd-1.6.5-systemd-user.patch
+Patch1:		rspamd-1.6.5-rundir.patch
 Requires:	lua-lpeg
 
 %description
@@ -78,6 +79,11 @@ DESTDIR=%{buildroot} INSTALLDIRS=vendor ninja install
 
 sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.service
 
+mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d/
+cat >%{buildroot}%{_sysconfdir}/tmpfiles.d/rspamd.conf <<'EOF'
+d /run/rspamd 0775 rspamd rspamd -
+EOF
+
 %pre
 %_pre_useradd %{rspamd_user} %{rspamd_home} /sbin/nologin
 
@@ -111,6 +117,7 @@ sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.ser
 %config(noreplace) %{rspamd_confdir}/worker-normal.inc
 %config(noreplace) %{rspamd_confdir}/worker-proxy.inc
 %config(noreplace) %{rspamd_confdir}/modules.d/*
+%{_sysconfdir}/tmpfiles.d/rspamd.conf
 %attr(-,%{rspamd_user},%{rspamd_user}) %dir %{rspamd_home}
 %dir %{rspamd_rulesdir}/regexp
 %dir %{rspamd_rulesdir}

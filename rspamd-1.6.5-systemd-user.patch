@@ -1,0 +1,15 @@
+--- rspamd-1.6.5/rspamd.service.omv~	2017-12-12 17:51:26.016834951 +0100
++++ rspamd-1.6.5/rspamd.service	2017-12-12 17:51:43.592864996 +0100
+@@ -6,9 +6,10 @@ Documentation=https://rspamd.com/doc/
+ [Service]
+ LimitNOFILE=1048576
+ NonBlocking=true
+-ExecStart=/usr/bin/rspamd -c /etc/rspamd/rspamd.conf -f
++ExecStart=/usr/bin/rspamd -c /etc/rspamd/rspamd.conf -f -u rspamd -g rspamd
+ ExecReload=/bin/kill -HUP $MAINPID
+-User=_rspamd
++User=rspamd
++Group=rspamd
+ RuntimeDirectory=rspamd
+ RuntimeDirectoryMode=0755
+ Restart=always

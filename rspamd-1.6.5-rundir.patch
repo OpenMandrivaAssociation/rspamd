@@ -1,0 +1,33 @@
+--- rspamd-1.6.5/CMakeLists.txt.omv~	2017-12-12 17:56:31.460275292 +0100
++++ rspamd-1.6.5/CMakeLists.txt	2017-12-12 17:56:40.978285451 +0100
+@@ -112,7 +112,7 @@ IF(NOT MANDIR)
+ ENDIF(NOT MANDIR)
+ 
+ IF(NOT RUNDIR)
+-	SET(RUNDIR "/var/run/rspamd")
++	SET(RUNDIR "/run/rspamd")
+ ENDIF(NOT RUNDIR)
+ 
+ IF(NOT DBDIR)
+--- rspamd-1.6.5/contrib/exim/local_scan.c.omv~	2017-12-12 17:56:17.996260833 +0100
++++ rspamd-1.6.5/contrib/exim/local_scan.c	2017-12-12 17:56:21.689264809 +0100
+@@ -59,7 +59,7 @@ static int MAX_SIZE_FILE = 64*1024;
+ static uschar *daemonIP = US"127.0.0.1";
+ static int daemonPort = 11333;
+ static uschar *temp_dir = US"/var/tmp";
+-static uschar *socket_name = US"/var/run/rspamd.sock";
++static uschar *socket_name = US"/run/rspamd.sock";
+ static int strange = 0;
+ 
+ optionlist local_scan_options[] = 
+--- rspamd-1.6.5/src/libutil/util.c.omv~	2017-12-12 17:55:48.756225678 +0100
++++ rspamd-1.6.5/src/libutil/util.c	2017-12-12 17:55:57.633237025 +0100
+@@ -960,7 +960,7 @@ rspamd_pidfile_open (const gchar *path,
+ 	if (path == NULL)
+ 		len = snprintf (pfh->pf_path,
+ 				sizeof (pfh->pf_path),
+-				"/var/run/%s.pid",
++				"/run/%s.pid",
+ 				g_get_prgname ());
+ 	else
+ 		len = snprintf (pfh->pf_path, sizeof (pfh->pf_path), "%s", path);
