@@ -8,8 +8,8 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.6.5
-Release:	2
+Version:	1.6.6
+Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -33,6 +33,7 @@ Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Patch0:		rspamd-1.6.5-systemd-user.patch
 Patch1:		rspamd-1.6.5-rundir.patch
+Patch2:		rspamd-no-more-libnsl.patch
 Requires:	lua-lpeg
 
 %description
