@@ -23,6 +23,7 @@ BuildRequires:  pkgconfig(luajit)
 BuildRequires:	pkgconfig(fann)
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(gdlib)
+BuildRequires:	pkgconfig(zlib)
 BuildRequires:  cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
