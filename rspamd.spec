@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.6.6
+Version:	1.7.2
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -19,7 +19,7 @@ BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libpcre)
-BuildRequires:  pkgconfig(lua)
+BuildRequires:  pkgconfig(luajit)
 BuildRequires:	pkgconfig(fann)
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(gdlib)
@@ -56,7 +56,7 @@ lua.
 	-DRUNDIR=%{_localstatedir}/run/rspamd \
 	-DWANT_SYSTEMD_UNITS=ON \
 	-DSYSTEMDDIR=%{_unitdir} \
-	-DENABLE_LUAJIT=OFF \
+	-DENABLE_LUAJIT=ON \
 	-DENABLE_HIREDIS=ON \
 	-DLOGDIR=%{_localstatedir}/log/rspamd \
 	-DEXAMPLESDIR=%{_datadir}/examples/rspamd \
@@ -102,6 +102,8 @@ EOF
 %{_bindir}/rspamc
 %{_bindir}/rspamadm
 %config(noreplace) %{rspamd_confdir}/%{name}.conf
+%config(noreplace) %{rspamd_confdir}/actions.conf
+%config(noreplace) %{rspamd_confdir}/groups.conf
 %config(noreplace) %{rspamd_confdir}/composites.conf
 %config(noreplace) %{rspamd_confdir}/maillist.inc
 %config(noreplace) %{rspamd_confdir}/metrics.conf
@@ -118,6 +120,8 @@ EOF
 %config(noreplace) %{rspamd_confdir}/worker-normal.inc
 %config(noreplace) %{rspamd_confdir}/worker-proxy.inc
 %config(noreplace) %{rspamd_confdir}/modules.d/*
+%dir %{rspamd_confdir}/scores.d
+%{rspamd_confdir}/scores.d/*.conf
 %{_sysconfdir}/tmpfiles.d/rspamd.conf
 %attr(-,%{rspamd_user},%{rspamd_user}) %dir %{rspamd_home}
 %dir %{rspamd_rulesdir}/regexp
@@ -139,4 +143,6 @@ EOF
 %{rspamd_wwwdir}/*
 %{_libdir}/*.so
 %{_datadir}/rspamd/effective_tld_names.dat
+%{_datadir}/rspamd/elastic
 %{_datadir}/rspamd/lib
+%{_datadir}/rspamd/languages
