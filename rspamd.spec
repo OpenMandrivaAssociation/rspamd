@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.7.4
+Version:	1.7.5
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -113,6 +113,7 @@ EOF
 %config(noreplace) %{rspamd_confdir}/modules.conf
 %config(noreplace) %{rspamd_confdir}/statistic.conf
 %config(noreplace) %{rspamd_confdir}/common.conf
+%config(noreplace) %{rspamd_confdir}/cgp.inc
 %config(noreplace) %{rspamd_confdir}/logging.inc
 %config(noreplace) %{rspamd_confdir}/options.inc
 %config(noreplace) %{rspamd_confdir}/redirectors.inc
