@@ -30,6 +30,7 @@ BuildRequires:	perl
 BuildRequires:	ragel
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:	ninja
+BuildRequires:	systemd
 Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Patch0:		rspamd-1.6.5-systemd-user.patch
