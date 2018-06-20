@@ -9,7 +9,7 @@
 
 Name:		rspamd
 Version:	1.7.6
-Release:	1
+Release:	2
 Summary:	Rapid spam filtering system
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -31,6 +31,7 @@ BuildRequires:	ragel
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:	ninja
 BuildRequires:	systemd
+BuildRequires:	rpm-helper
 Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Patch0:		rspamd-1.6.5-systemd-user.patch
