@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.7.7
+Version:	1.7.9
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
