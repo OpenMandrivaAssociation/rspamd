@@ -106,6 +106,7 @@ EOF
 %{_bindir}/rspamadm
 %config(noreplace) %{rspamd_confdir}/%{name}.conf
 %config(noreplace) %{rspamd_confdir}/actions.conf
+%config(noreplace) %{rspamd_confdir}/settings.conf
 %config(noreplace) %{rspamd_confdir}/groups.conf
 %config(noreplace) %{rspamd_confdir}/composites.conf
 %config(noreplace) %{rspamd_confdir}/maillist.inc
