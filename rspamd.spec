@@ -9,7 +9,7 @@
 
 Name:		rspamd
 Version:	1.8.1
-Release:	1
+Release:	2
 Summary:	Rapid spam filtering system
 Group:		System/Servers
 License:	BSD-2-Clause
