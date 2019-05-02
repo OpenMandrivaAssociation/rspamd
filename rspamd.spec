@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.8.3
+Version:	1.9.2
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -134,19 +134,18 @@ EOF
 %dir %{rspamd_confdir}/modules.d
 %dir %{rspamd_confdir}/local.d
 %dir %{rspamd_confdir}/override.d
-%dir %{rspamd_pluginsdir}/lua
 %dir %{rspamd_pluginsdir}
 %dir %{rspamd_wwwdir}
 %config(noreplace) %{rspamd_confdir}/2tld.inc
 %config(noreplace) %{rspamd_confdir}/surbl-whitelist.inc
 %config(noreplace) %{rspamd_confdir}/spf_dkim_whitelist.inc
 %config(noreplace) %{rspamd_confdir}/dmarc_whitelist.inc
-%{rspamd_pluginsdir}/lua/*.lua
 %{rspamd_rulesdir}/regexp/*.lua
 %{rspamd_rulesdir}/*.lua
 %{rspamd_wwwdir}/*
 %{_libdir}/*.so
 %{_datadir}/rspamd/effective_tld_names.dat
 %{_datadir}/rspamd/elastic
-%{_datadir}/rspamd/lib
+%{_datadir}/rspamd/lualib
 %{_datadir}/rspamd/languages
+%{_datadir}/rspamd/*.lua
