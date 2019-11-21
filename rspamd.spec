@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	1.9.4
+Version:	2.2
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -24,6 +24,7 @@ BuildRequires:	pkgconfig(fann)
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(gdlib)
 BuildRequires:	pkgconfig(zlib)
+BuildRequires:	pkgconfig(libsodium)
 BuildRequires:  cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
@@ -35,7 +36,7 @@ BuildRequires:	rpm-helper
 Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Patch0:		rspamd-1.6.5-systemd-user.patch
-Patch1:		rspamd-1.6.5-rundir.patch
+#Patch1:		rspamd-1.6.5-rundir.patch
 Requires:	lua-lpeg
 
 %description
@@ -108,22 +109,20 @@ EOF
 %config(noreplace) %{rspamd_confdir}/settings.conf
 %config(noreplace) %{rspamd_confdir}/groups.conf
 %config(noreplace) %{rspamd_confdir}/composites.conf
-%config(noreplace) %{rspamd_confdir}/maillist.inc
 %config(noreplace) %{rspamd_confdir}/metrics.conf
-%config(noreplace) %{rspamd_confdir}/mid.inc
-%config(noreplace) %{rspamd_confdir}/mime_types.inc
 %config(noreplace) %{rspamd_confdir}/modules.conf
 %config(noreplace) %{rspamd_confdir}/statistic.conf
 %config(noreplace) %{rspamd_confdir}/common.conf
-%config(noreplace) %{rspamd_confdir}/cgp.inc
-%config(noreplace) %{rspamd_confdir}/logging.inc
-%config(noreplace) %{rspamd_confdir}/options.inc
-%config(noreplace) %{rspamd_confdir}/redirectors.inc
-%config(noreplace) %{rspamd_confdir}/worker-controller.inc
-%config(noreplace) %{rspamd_confdir}/worker-fuzzy.inc
-%config(noreplace) %{rspamd_confdir}/worker-normal.inc
-%config(noreplace) %{rspamd_confdir}/worker-proxy.inc
 %config(noreplace) %{rspamd_confdir}/modules.d/*
+%config(noreplace) %{rspamd_confdir}/maps.d/*
+%config(noreplace) %{_sysconfdir}/rspamd/cgp.inc
+%config(noreplace) %{_sysconfdir}/rspamd/logging.inc
+%config(noreplace) %{_sysconfdir}/rspamd/options.inc
+%config(noreplace) %{_sysconfdir}/rspamd/worker-controller.inc
+%config(noreplace) %{_sysconfdir}/rspamd/worker-fuzzy.inc
+%config(noreplace) %{_sysconfdir}/rspamd/worker-normal.inc
+%config(noreplace) %{_sysconfdir}/rspamd/worker-proxy.inc
+
 %dir %{rspamd_confdir}/scores.d
 %{rspamd_confdir}/scores.d/*.conf
 %{_sysconfdir}/tmpfiles.d/rspamd.conf
@@ -136,10 +135,6 @@ EOF
 %dir %{rspamd_confdir}/override.d
 %dir %{rspamd_pluginsdir}
 %dir %{rspamd_wwwdir}
-%config(noreplace) %{rspamd_confdir}/2tld.inc
-%config(noreplace) %{rspamd_confdir}/surbl-whitelist.inc
-%config(noreplace) %{rspamd_confdir}/spf_dkim_whitelist.inc
-%config(noreplace) %{rspamd_confdir}/dmarc_whitelist.inc
 %{rspamd_rulesdir}/regexp/*.lua
 %{rspamd_rulesdir}/*.lua
 %{rspamd_wwwdir}/*
