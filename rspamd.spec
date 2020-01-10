@@ -46,7 +46,7 @@ lua.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 %build
 # ENABLE_LUAJIT is off because of lua 5.3 vs. luajit 5.1 mismatch
