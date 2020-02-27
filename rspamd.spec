@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	2.3
+Version:	2.4
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -36,7 +36,7 @@ BuildRequires:	rpm-helper
 Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Patch0:		rspamd-1.6.5-systemd-user.patch
-#Patch1:		rspamd-1.6.5-rundir.patch
+Patch1:		rspamd-2.4-clang10.patch
 Requires:	lua-lpeg
 
 %description
@@ -45,8 +45,7 @@ with big amount of mail and can be easily extended with own filters written in
 lua.
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
 
 %build
 # ENABLE_LUAJIT is off because of lua 5.3 vs. luajit 5.1 mismatch
