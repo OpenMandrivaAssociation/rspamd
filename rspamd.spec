@@ -8,7 +8,7 @@
 %define rspamd_wwwdir   %{_datadir}/rspamd/www
 
 Name:		rspamd
-Version:	2.5
+Version:	2.6
 Release:	1
 Summary:	Rapid spam filtering system
 Group:		System/Servers
@@ -36,7 +36,6 @@ BuildRequires:	rpm-helper
 Requires(pre,postun):  rpm-helper
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Patch0:		rspamd-1.6.5-systemd-user.patch
-Patch1:		rspamd-2.4-clang10.patch
 Requires:	lua-lpeg
 
 %description
@@ -126,6 +125,7 @@ EOF
 %{rspamd_confdir}/scores.d/*.conf
 %{_sysconfdir}/tmpfiles.d/rspamd.conf
 %attr(-,%{rspamd_user},%{rspamd_user}) %dir %{rspamd_home}
+%dir %{rspamd_rulesdir}/controller
 %dir %{rspamd_rulesdir}/regexp
 %dir %{rspamd_rulesdir}
 %dir %{rspamd_confdir}
@@ -134,6 +134,7 @@ EOF
 %dir %{rspamd_confdir}/override.d
 %dir %{rspamd_pluginsdir}
 %dir %{rspamd_wwwdir}
+%{rspamd_rulesdir}/controller/*.lua
 %{rspamd_rulesdir}/regexp/*.lua
 %{rspamd_rulesdir}/*.lua
 %{rspamd_wwwdir}/*
