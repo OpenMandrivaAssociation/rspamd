@@ -1,42 +1,43 @@
-%define rspamd_user      rspamd
-%define rspamd_group     %{rspamd_user}
-%define rspamd_home      %{_localstatedir}/lib/rspamd
-%define rspamd_logdir    %{_localstatedir}/log/rspamd
-%define rspamd_confdir   %{_sysconfdir}/rspamd
-%define rspamd_pluginsdir   %{_datadir}/rspamd
-%define rspamd_rulesdir   %{_datadir}/rspamd/rules
-%define rspamd_wwwdir   %{_datadir}/rspamd/www
+%define rspamd_user rspamd
+%define rspamd_group %{rspamd_user}
+%define rspamd_home %{_localstatedir}/lib/rspamd
+%define rspamd_logdir %{_localstatedir}/log/rspamd
+%define rspamd_confdir %{_sysconfdir}/rspamd
+%define rspamd_pluginsdir %{_datadir}/rspamd
+%define rspamd_rulesdir %{_datadir}/rspamd/rules
+%define rspamd_wwwdir %{_datadir}/rspamd/www
 
+Summary:	Rapid spam filtering system
 Name:		rspamd
 Version:	2.7
 Release:	1
-Summary:	Rapid spam filtering system
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
-BuildRequires:  pkgconfig(glib-2.0)
+Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
+Source1:	%{name}.sysusers
+Patch0:		rspamd-1.6.5-systemd-user.patch
+BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
 BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libpcre)
-BuildRequires:  pkgconfig(luajit)
+BuildRequires:	pkgconfig(luajit)
 BuildRequires:	pkgconfig(fann)
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(gdlib)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(libsodium)
-BuildRequires:  cmake
+BuildRequires:	cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
 BuildRequires:	ragel
-BuildRequires:  pkgconfig(sqlite3)
+BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	ninja
-BuildRequires:	systemd
-BuildRequires:	rpm-helper
-Requires(pre,postun):  rpm-helper
-Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
-Patch0:		rspamd-1.6.5-systemd-user.patch
+BuildRequires:	systemd-rpm-macros
 Requires:	lua-lpeg
+Requires(pre):	systemd
+%systemd_requires
 
 %description
 Rspamd is a rapid, modular and lightweight spam filter. It is designed to work
@@ -48,7 +49,7 @@ lua.
 
 %build
 # ENABLE_LUAJIT is off because of lua 5.3 vs. luajit 5.1 mismatch
-%{__cmake} \
+%cmake \
 	-DCMAKE_C_OPT_FLAGS="%{optflags}" \
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCONFDIR=%{_sysconfdir}/rspamd \
@@ -70,28 +71,39 @@ lua.
 	-DRSPAMD_USER=%{rspamd_user} \
 	-G Ninja
 
-ninja
+%ninja_build
 
 %install
-DESTDIR=%{buildroot} INSTALLDIRS=vendor ninja install
+%ninja_install INSTALLDIRS=vendor
 
-%{__install} -d -p -m 0755 %{buildroot}%{rspamd_home}
-%{__install} -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/local.d/
-%{__install} -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/override.d/
+install -d -p -m 0755 %{buildroot}%{rspamd_home}
+install -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/local.d/
+install -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/override.d/
 
 sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.service
 
-mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d/
-cat >%{buildroot}%{_sysconfdir}/tmpfiles.d/rspamd.conf <<'EOF'
-d /run/rspamd 0775 rspamd rspamd -
+install -Dm 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/rspamd.conf
+
+mkdir -p %{buildroot}%{_sysconfdir}%{_tmpfilesdir}
+cat >%{buildroot}%{_sysconfdir}%{_tmpfilesdir}/rspamd.conf <<'EOF'
+d /run/rspamd 0755 rspamd rspamd -
+d /var/lib/rspamd 0755 rspamd rspamd -
+Z /var/lib/rspamd - rspamd rspamd -
+d /var/log/rspamd 0755 rspamd rspamd -
+Z /var/log/rspamd - rspamd rspamd -
 EOF
 
 %pre
-%_pre_useradd %{rspamd_user} %{rspamd_home} /sbin/nologin
+%sysusers_create_package %{name}.conf %{SOURCE1}
+
+%post
+%systemd_post %{name}.service
+
+%preun
+%systemd_preun %{name}.service
 
 %postun
-%_postun_userdel %{rspamd_user}
-%_postun_groupdel %{rspamd_group}
+%systemd_postun %{name}.service
 
 %files
 %{_unitdir}/%{name}.service
@@ -120,10 +132,10 @@ EOF
 %config(noreplace) %{_sysconfdir}/rspamd/worker-fuzzy.inc
 %config(noreplace) %{_sysconfdir}/rspamd/worker-normal.inc
 %config(noreplace) %{_sysconfdir}/rspamd/worker-proxy.inc
-
 %dir %{rspamd_confdir}/scores.d
 %{rspamd_confdir}/scores.d/*.conf
-%{_sysconfdir}/tmpfiles.d/rspamd.conf
+%{_sysusersdir}/rspamd.conf
+%{_tmpfilesdir}/rspamd.conf
 %attr(-,%{rspamd_user},%{rspamd_user}) %dir %{rspamd_home}
 %dir %{rspamd_rulesdir}/controller
 %dir %{rspamd_rulesdir}/regexp
