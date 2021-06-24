@@ -17,6 +17,7 @@ URL:		https://rspamd.com/
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Source1:	%{name}.sysusers
 Patch0:		rspamd-1.6.5-systemd-user.patch
+Patch1:		rspamd-linking.patch
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
@@ -74,7 +75,7 @@ lua.
 %ninja_build
 
 %install
-%ninja_install INSTALLDIRS=vendor
+%ninja_install -C build
 
 install -d -p -m 0755 %{buildroot}%{rspamd_home}
 install -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/local.d/

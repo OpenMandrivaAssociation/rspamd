@@ -1,0 +1,41 @@
+diff --git a/contrib/aho-corasick/acism.c b/contrib/aho-corasick/acism.c
+index e2b48a5..a9ee7ac 100644
+--- a/contrib/aho-corasick/acism.c
++++ b/contrib/aho-corasick/acism.c
+@@ -24,7 +24,7 @@
+ 
+ #define BACK ((SYMBOL)0)
+ #define ROOT ((STATE) 0)
+-extern const guchar lc_map[256];
++const guchar lc_map[256];
+ 
+ int
+ acism_lookup(ac_trie_t const *psp, const char *text, size_t len,
+diff --git a/contrib/kann/CMakeLists.txt b/contrib/kann/CMakeLists.txt
+index b3a1d54..2f86ee1 100644
+--- a/contrib/kann/CMakeLists.txt
++++ b/contrib/kann/CMakeLists.txt
+@@ -4,7 +4,9 @@ ADD_LIBRARY(rspamd-kann SHARED ${LIBKANNSRC})
+ 
+ IF(WITH_BLAS)
+     MESSAGE(STATUS "Use openblas to accelerate kann")
+-    TARGET_LINK_LIBRARIES(rspamd-kann ${BLAS_REQUIRED_LIBRARIES})
++    TARGET_LINK_LIBRARIES(rspamd-kann m ${BLAS_REQUIRED_LIBRARIES})
++ELSE(WITH_BLAS)
++    TARGET_LINK_LIBRARIES(rspamd-kann m)
+ ENDIF(WITH_BLAS)
+ 
+ INSTALL(TARGETS rspamd-kann LIBRARY DESTINATION ${RSPAMD_LIBDIR})
+\ No newline at end of file
+diff --git a/contrib/libev/CMakeLists.txt b/contrib/libev/CMakeLists.txt
+index 53ab6c3..077dd19 100644
+--- a/contrib/libev/CMakeLists.txt
++++ b/contrib/libev/CMakeLists.txt
+@@ -59,6 +59,7 @@ CHECK_LIBRARY_EXISTS(m ceil "" HAVE_LIBM)
+ CONFIGURE_FILE(config.h.in libev-config.h)
+ 
+ ADD_LIBRARY(rspamd-ev SHARED ${LIBEVSRC})
++TARGET_LINK_LIBRARIES(rspamd-ev m)
+ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+ ADD_DEFINITIONS("-DEV_CONFIG_H=\"libev-config.h\""
+ 		-DEV_MULTIPLICITY=1
