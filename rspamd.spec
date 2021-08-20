@@ -9,7 +9,7 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	2.7
+Version:	3.0
 Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -18,6 +18,7 @@ Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Source1:	%{name}.sysusers
 Patch0:		rspamd-1.6.5-systemd-user.patch
 Patch1:		rspamd-linking.patch
+Patch2:		rspamd-3.0-glibc-2.34.patch
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
@@ -85,8 +86,8 @@ sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.ser
 
 install -Dm 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/rspamd.conf
 
-mkdir -p %{buildroot}%{_sysconfdir}%{_tmpfilesdir}
-cat >%{buildroot}%{_sysconfdir}%{_tmpfilesdir}/rspamd.conf <<'EOF'
+mkdir -p %{buildroot}%{_tmpfilesdir}
+cat >%{buildroot}%{_tmpfilesdir}/rspamd.conf <<'EOF'
 d /run/rspamd 0755 rspamd rspamd -
 d /var/lib/rspamd 0755 rspamd rspamd -
 Z /var/lib/rspamd - rspamd rspamd -
