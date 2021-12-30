@@ -25,6 +25,7 @@ BuildRequires:	pkgconfig(libssl)
 BuildRequires:	pkgconfig(libpcre)
 BuildRequires:	pkgconfig(luajit)
 BuildRequires:	pkgconfig(fann)
+BuildRequires:	pkgconfig(fmt)
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(gdlib)
 BuildRequires:	pkgconfig(zlib)
@@ -59,6 +60,7 @@ lua.
 	-DRUNDIR=%{_localstatedir}/run/rspamd \
 	-DWANT_SYSTEMD_UNITS=ON \
 	-DSYSTEMDDIR=%{_unitdir} \
+	-DSYSTEM_FMT:BOOL=ON \
 	-DENABLE_LUAJIT=ON \
 	-DENABLE_HIREDIS=ON \
 	-DLOGDIR=%{_localstatedir}/log/rspamd \
