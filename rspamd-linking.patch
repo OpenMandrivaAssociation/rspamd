@@ -1,7 +1,6 @@
-diff --git a/contrib/aho-corasick/acism.c b/contrib/aho-corasick/acism.c
-index e2b48a5..a9ee7ac 100644
---- a/contrib/aho-corasick/acism.c
-+++ b/contrib/aho-corasick/acism.c
+diff -up rspamd-3.1/contrib/aho-corasick/acism.c.2~ rspamd-3.1/contrib/aho-corasick/acism.c
+--- rspamd-3.1/contrib/aho-corasick/acism.c.2~	2021-11-01 15:33:30.000000000 +0100
++++ rspamd-3.1/contrib/aho-corasick/acism.c	2021-12-30 04:02:25.402543401 +0100
 @@ -24,7 +24,7 @@
  
  #define BACK ((SYMBOL)0)
@@ -11,11 +10,10 @@ index e2b48a5..a9ee7ac 100644
  
  int
  acism_lookup(ac_trie_t const *psp, const char *text, size_t len,
-diff --git a/contrib/kann/CMakeLists.txt b/contrib/kann/CMakeLists.txt
-index b3a1d54..2f86ee1 100644
---- a/contrib/kann/CMakeLists.txt
-+++ b/contrib/kann/CMakeLists.txt
-@@ -4,7 +4,9 @@ ADD_LIBRARY(rspamd-kann SHARED ${LIBKANNSRC})
+diff -up rspamd-3.1/contrib/kann/CMakeLists.txt.2~ rspamd-3.1/contrib/kann/CMakeLists.txt
+--- rspamd-3.1/contrib/kann/CMakeLists.txt.2~	2021-11-01 15:33:30.000000000 +0100
++++ rspamd-3.1/contrib/kann/CMakeLists.txt	2021-12-30 04:02:25.402543401 +0100
+@@ -8,7 +8,9 @@ ENDIF()
  
  IF(WITH_BLAS)
      MESSAGE(STATUS "Use openblas to accelerate kann")
@@ -27,15 +25,14 @@ index b3a1d54..2f86ee1 100644
  
  INSTALL(TARGETS rspamd-kann LIBRARY DESTINATION ${RSPAMD_LIBDIR})
 \ No newline at end of file
-diff --git a/contrib/libev/CMakeLists.txt b/contrib/libev/CMakeLists.txt
-index 53ab6c3..077dd19 100644
---- a/contrib/libev/CMakeLists.txt
-+++ b/contrib/libev/CMakeLists.txt
-@@ -59,6 +59,7 @@ CHECK_LIBRARY_EXISTS(m ceil "" HAVE_LIBM)
- CONFIGURE_FILE(config.h.in libev-config.h)
- 
- ADD_LIBRARY(rspamd-ev SHARED ${LIBEVSRC})
-+TARGET_LINK_LIBRARIES(rspamd-ev m)
+diff -up rspamd-3.1/contrib/libev/CMakeLists.txt.2~ rspamd-3.1/contrib/libev/CMakeLists.txt
+--- rspamd-3.1/contrib/libev/CMakeLists.txt.2~	2021-12-30 04:02:25.402543401 +0100
++++ rspamd-3.1/contrib/libev/CMakeLists.txt	2021-12-30 04:03:58.259344660 +0100
+@@ -62,6 +62,7 @@ IF(ENABLE_STATIC MATCHES "ON")
+ 	ADD_LIBRARY(rspamd-ev STATIC ${LIBEVSRC})
+ ELSE()
+ 	ADD_LIBRARY(rspamd-ev SHARED ${LIBEVSRC})
++	TARGET_LINK_LIBRARIES(rspamd-ev m)
+ ENDIF()
  include_directories("${CMAKE_CURRENT_BINARY_DIR}")
  ADD_DEFINITIONS("-DEV_CONFIG_H=\"libev-config.h\""
- 		-DEV_MULTIPLICITY=1
