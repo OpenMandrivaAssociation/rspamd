@@ -30,6 +30,7 @@ BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(gdlib)
 BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(libsodium)
+BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
@@ -61,6 +62,7 @@ lua.
 	-DWANT_SYSTEMD_UNITS=ON \
 	-DSYSTEMDDIR=%{_unitdir} \
 	-DSYSTEM_FMT:BOOL=ON \
+	-DSYSTEM_ZSTD:BOOL=ON \
 	-DENABLE_LUAJIT=ON \
 	-DENABLE_HIREDIS=ON \
 	-DLOGDIR=%{_localstatedir}/log/rspamd \
