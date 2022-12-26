@@ -9,8 +9,8 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.3
-Release:	2
+Version:	3.4
+Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
