@@ -10,29 +10,3 @@ diff -up rspamd-3.1/contrib/aho-corasick/acism.c.2~ rspamd-3.1/contrib/aho-coras
  
  int
  acism_lookup(ac_trie_t const *psp, const char *text, size_t len,
-diff -up rspamd-3.1/contrib/kann/CMakeLists.txt.2~ rspamd-3.1/contrib/kann/CMakeLists.txt
---- rspamd-3.1/contrib/kann/CMakeLists.txt.2~	2021-11-01 15:33:30.000000000 +0100
-+++ rspamd-3.1/contrib/kann/CMakeLists.txt	2021-12-30 04:02:25.402543401 +0100
-@@ -8,7 +8,9 @@ ENDIF()
- 
- IF(WITH_BLAS)
-     MESSAGE(STATUS "Use openblas to accelerate kann")
--    TARGET_LINK_LIBRARIES(rspamd-kann ${BLAS_REQUIRED_LIBRARIES})
-+    TARGET_LINK_LIBRARIES(rspamd-kann m ${BLAS_REQUIRED_LIBRARIES})
-+ELSE(WITH_BLAS)
-+    TARGET_LINK_LIBRARIES(rspamd-kann m)
- ENDIF(WITH_BLAS)
- 
- INSTALL(TARGETS rspamd-kann LIBRARY DESTINATION ${RSPAMD_LIBDIR})
-\ No newline at end of file
-diff -up rspamd-3.1/contrib/libev/CMakeLists.txt.2~ rspamd-3.1/contrib/libev/CMakeLists.txt
---- rspamd-3.1/contrib/libev/CMakeLists.txt.2~	2021-12-30 04:02:25.402543401 +0100
-+++ rspamd-3.1/contrib/libev/CMakeLists.txt	2021-12-30 04:03:58.259344660 +0100
-@@ -62,6 +62,7 @@ IF(ENABLE_STATIC MATCHES "ON")
- 	ADD_LIBRARY(rspamd-ev STATIC ${LIBEVSRC})
- ELSE()
- 	ADD_LIBRARY(rspamd-ev SHARED ${LIBEVSRC})
-+	TARGET_LINK_LIBRARIES(rspamd-ev m)
- ENDIF()
- include_directories("${CMAKE_CURRENT_BINARY_DIR}")
- ADD_DEFINITIONS("-DEV_CONFIG_H=\"libev-config.h\""
