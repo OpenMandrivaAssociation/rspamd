@@ -1,3 +1,7 @@
+# Allow undefined symbols in plugins - they're resolved
+# by dlopen
+%define _disable_ld_no_undefined 1
+
 %define rspamd_user rspamd
 %define rspamd_group %{rspamd_user}
 %define rspamd_home %{_localstatedir}/lib/rspamd
@@ -9,8 +13,8 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.6
-Release:	2
+Version:	3.7.1
+Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
