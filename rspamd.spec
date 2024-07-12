@@ -36,6 +36,7 @@ BuildRequires:	pkgconfig(zlib)
 BuildRequires:	pkgconfig(libsodium)
 BuildRequires:	pkgconfig(libzstd)
 BuildRequires:	pkgconfig(libunwind-llvm)
+BuildRequires:	pkgconfig(libarchive) >= 3.0.0
 BuildRequires:	cmake
 BuildRequires:	magic-devel
 BuildRequires:	perl
