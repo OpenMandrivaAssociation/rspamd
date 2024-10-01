@@ -13,7 +13,7 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.9.1
+Version:	3.10.0
 Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -21,7 +21,6 @@ URL:		https://rspamd.com/
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Source1:	%{name}.sysusers
 Patch0:		rspamd-1.6.5-systemd-user.patch
-Patch1:		rspamd-linking.patch
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
