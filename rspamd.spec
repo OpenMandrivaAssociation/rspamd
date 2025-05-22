@@ -13,8 +13,8 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.10.0
-Release:	4
+Version:	3.11.1
+Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
@@ -120,10 +120,13 @@ EOF
 %{_mandir}/man8/%{name}.*
 %{_mandir}/man1/rspamc.*
 %{_mandir}/man1/rspamadm.*
-%{_bindir}/rspamd
 %{_bindir}/rspamd_stats
 %{_bindir}/rspamc
+%{_bindir}/rspamd
 %{_bindir}/rspamadm
+%{_bindir}/rspamc-%{version}
+%{_bindir}/rspamd-%{version}
+%{_bindir}/rspamadm-%{version}
 %config(noreplace) %{rspamd_confdir}/%{name}.conf
 %config(noreplace) %{rspamd_confdir}/actions.conf
 %config(noreplace) %{rspamd_confdir}/settings.conf
@@ -133,8 +136,16 @@ EOF
 %config(noreplace) %{rspamd_confdir}/modules.conf
 %config(noreplace) %{rspamd_confdir}/statistic.conf
 %config(noreplace) %{rspamd_confdir}/common.conf
+%dir %{rspamd_confdir}/maps.d
+%dir %{rspamd_confdir}/lua.local.d
+%dir %{rspamd_confdir}/modules.local.d
+%dir %{rspamd_confdir}/scores.d
 %config(noreplace) %{rspamd_confdir}/modules.d/*
 %config(noreplace) %{rspamd_confdir}/maps.d/*
+%config(noreplace) %{rspamd_confdir}/local.d/*
+%config(noreplace) %{rspamd_confdir}/lua.local.d/*
+%config(noreplace) %{rspamd_confdir}/modules.local.d/*
+%config(noreplace) %{rspamd_confdir}/override.d/*
 %config(noreplace) %{_sysconfdir}/rspamd/cgp.inc
 %config(noreplace) %{_sysconfdir}/rspamd/lang_detection.inc
 %config(noreplace) %{_sysconfdir}/rspamd/logging.inc
@@ -143,7 +154,6 @@ EOF
 %config(noreplace) %{_sysconfdir}/rspamd/worker-fuzzy.inc
 %config(noreplace) %{_sysconfdir}/rspamd/worker-normal.inc
 %config(noreplace) %{_sysconfdir}/rspamd/worker-proxy.inc
-%dir %{rspamd_confdir}/scores.d
 %{rspamd_confdir}/scores.d/*.conf
 %{_sysusersdir}/rspamd.conf
 %{_tmpfilesdir}/rspamd.conf
@@ -163,7 +173,6 @@ EOF
 %{rspamd_wwwdir}/*
 %{_libdir}/*.so
 %{_datadir}/rspamd/effective_tld_names.dat
-%{_datadir}/rspamd/elastic
 %{_datadir}/rspamd/lualib
 %{_datadir}/rspamd/languages
 %{_datadir}/rspamd/*.lua
