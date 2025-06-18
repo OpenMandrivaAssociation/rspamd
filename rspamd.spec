@@ -13,7 +13,7 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.11.1
+Version:	3.12.1
 Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -54,6 +54,11 @@ lua.
 
 %prep
 %autosetup -p1
+
+# The included copy of fmt headers is broken, let's replace it with what works
+rm -rf contrib/fmt/
+mkdir -p contrib/fmt/include
+ln -s %{_includedir}/fmt contrib/fmt/include/
 
 %build
 # ENABLE_LUAJIT is off because of lua 5.3 vs. luajit 5.1 mismatch
