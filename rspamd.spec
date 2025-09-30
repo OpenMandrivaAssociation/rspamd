@@ -13,7 +13,7 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.12.1
+Version:	3.13.1
 Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
@@ -151,7 +151,6 @@ EOF
 %config(noreplace) %{rspamd_confdir}/lua.local.d/*
 %config(noreplace) %{rspamd_confdir}/modules.local.d/*
 %config(noreplace) %{rspamd_confdir}/override.d/*
-%config(noreplace) %{_sysconfdir}/rspamd/cgp.inc
 %config(noreplace) %{_sysconfdir}/rspamd/lang_detection.inc
 %config(noreplace) %{_sysconfdir}/rspamd/logging.inc
 %config(noreplace) %{_sysconfdir}/rspamd/options.inc
