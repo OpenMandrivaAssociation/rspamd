@@ -13,7 +13,7 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.13.1
+Version:	3.13.2
 Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
