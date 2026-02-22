@@ -4,7 +4,7 @@
 
 %define rspamd_user rspamd
 %define rspamd_group %{rspamd_user}
-%define rspamd_home %{_localstatedir}/lib/rspamd
+%define rspamd_home /srv/rspamd
 %define rspamd_logdir %{_localstatedir}/log/rspamd
 %define rspamd_confdir %{_sysconfdir}/rspamd
 %define rspamd_pluginsdir %{_datadir}/rspamd
@@ -14,13 +14,16 @@
 Summary:	Rapid spam filtering system
 Name:		rspamd
 Version:	3.14.3
-Release:	2
+Release:	3
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
 Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
 Source1:	%{name}.sysusers
-Patch0:		rspamd-1.6.5-systemd-user.patch
+# Redis instance setups
+Source2:	rspamd-temp.conf
+Source3:	rspamd-permanent.conf
+Patch0:		rspamd-omv-config.patch
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
@@ -42,10 +45,9 @@ BuildRequires:	perl
 BuildRequires:	ragel
 BuildRequires:	pkgconfig(sqlite3)
 BuildRequires:	ninja
-BuildRequires:	systemd-rpm-macros
 Requires:	lua-lpeg
-Requires(pre):	systemd
-%systemd_requires
+Requires:	redis
+Requires(pre):	group(redis)
 
 %description
 Rspamd is a rapid, modular and lightweight spam filter. It is designed to work
@@ -67,21 +69,22 @@ ln -s %{_includedir}/fmt contrib/fmt/include/
 	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCONFDIR=%{_sysconfdir}/rspamd \
 	-DMANDIR=%{_mandir} \
-	-DDBDIR=%{_localstatedir}/lib/rspamd \
-	-DRUNDIR=%{_localstatedir}/run/rspamd \
+	-DDBDIR=/srv/rspamd \
+	-DRUNDIR=/run/rspamd \
+	-DLOGDIR=%{_localstatedir}/log/rspamd \
+	-DCACHEDIR=%{_localstatedir}/cache/rspamd \
 	-DWANT_SYSTEMD_UNITS=ON \
 	-DSYSTEMDDIR=%{_unitdir} \
 	-DSYSTEM_FMT:BOOL=ON \
 	-DSYSTEM_ZSTD:BOOL=ON \
+	-DSYSTEM_HIREDIS:BOOL=ON \
 	-DENABLE_LUAJIT=ON \
 	-DENABLE_HIREDIS=ON \
-	-DLOGDIR=%{_localstatedir}/log/rspamd \
 	-DEXAMPLESDIR=%{_datadir}/examples/rspamd \
 	-DPLUGINSDIR=%{_datadir}/rspamd \
 	-DLIBDIR=%{_libdir} \
 	-DINCLUDEDIR=%{_includedir} \
 	-DNO_SHARED=ON \
-	-DDEBIAN_BUILD=1 \
 	-DRSPAMD_GROUP=%{rspamd_group} \
 	-DRSPAMD_USER=%{rspamd_user} \
 	-G Ninja
@@ -102,25 +105,18 @@ install -Dm 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/rspamd.conf
 mkdir -p %{buildroot}%{_tmpfilesdir}
 cat >%{buildroot}%{_tmpfilesdir}/rspamd.conf <<'EOF'
 d /run/rspamd 0755 rspamd rspamd -
-d /var/lib/rspamd 0755 rspamd rspamd -
-Z /var/lib/rspamd - rspamd rspamd -
+d /srv/rspamd 0755 rspamd rspamd -
+Z /srv/rspamd - rspamd rspamd -
 d /var/log/rspamd 0755 rspamd rspamd -
 Z /var/log/rspamd - rspamd rspamd -
 EOF
 
-%pre
-%sysusers_create_package %{name}.conf %{SOURCE1}
-
-%post
-%systemd_post %{name}.service
-
-%preun
-%systemd_preun %{name}.service
-
-%postun
-%systemd_postun %{name}.service
+mkdir -p %{buildroot}%{_sysconfdir}/redis
+install -c -m 640 %{S:2} %{S:3} %{buildroot}%{_sysconfdir}/redis/
 
 %files
+%config %attr(0640, root, redis) %{_sysconfdir}/redis/rspamd-temp.conf
+%config %attr(0640, root, redis) %{_sysconfdir}/redis/rspamd-permanent.conf
 %{_unitdir}/%{name}.service
 %{_mandir}/man8/%{name}.*
 %{_mandir}/man1/rspamc.*
