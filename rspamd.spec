@@ -13,8 +13,8 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	3.14.3
-Release:	3
+Version:	4.0.1
+Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
@@ -121,6 +121,7 @@ install -c -m 640 %{S:2} %{S:3} %{buildroot}%{_sysconfdir}/redis/
 %{_mandir}/man8/%{name}.*
 %{_mandir}/man1/rspamc.*
 %{_mandir}/man1/rspamadm.*
+%{_bindir}/mapstats
 %{_bindir}/rspamd_stats
 %{_bindir}/rspamc
 %{_bindir}/rspamd
