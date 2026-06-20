@@ -1,6 +1,6 @@
-diff -up rspamd-4.0.1/conf/modules.d/arc.conf.1~ rspamd-4.0.1/conf/modules.d/arc.conf
---- rspamd-4.0.1/conf/modules.d/arc.conf.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/modules.d/arc.conf	2026-04-07 21:49:04.737296703 +0200
+diff -up rspamd-4.1.1/conf/modules.d/arc.conf.1~ rspamd-4.1.1/conf/modules.d/arc.conf
+--- rspamd-4.1.1/conf/modules.d/arc.conf.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/modules.d/arc.conf	2026-06-20 17:55:35.775368242 +0200
 @@ -32,11 +32,12 @@ arc {
    # If true, multiple from headers are allowed (but only first is used)
    allow_hdrfrom_multiple = false;
@@ -17,9 +17,9 @@ diff -up rspamd-4.0.1/conf/modules.d/arc.conf.1~ rspamd-4.0.1/conf/modules.d/arc
    # If false, messages from authenticated users are not selected for signing
    sign_authenticated = false;
    # If false, inbound messages are not selected for signing
-diff -up rspamd-4.0.1/conf/modules.d/classifier-bayes.conf.1~ rspamd-4.0.1/conf/modules.d/classifier-bayes.conf
---- rspamd-4.0.1/conf/modules.d/classifier-bayes.conf.1~	2026-04-07 21:49:04.737005630 +0200
-+++ rspamd-4.0.1/conf/modules.d/classifier-bayes.conf	2026-04-07 21:49:04.737005630 +0200
+diff -up rspamd-4.1.1/conf/modules.d/classifier-bayes.conf.1~ rspamd-4.1.1/conf/modules.d/classifier-bayes.conf
+--- rspamd-4.1.1/conf/modules.d/classifier-bayes.conf.1~	2026-06-20 17:55:35.775571125 +0200
++++ rspamd-4.1.1/conf/modules.d/classifier-bayes.conf	2026-06-20 17:55:35.775571125 +0200
 @@ -0,0 +1,10 @@
 +backend = "redis";
 +servers = "/run/redis/rspamd-permanent/redis.sock";
@@ -31,9 +31,9 @@ diff -up rspamd-4.0.1/conf/modules.d/classifier-bayes.conf.1~ rspamd-4.0.1/conf/
 +	ham_threshold = -2.0;
 +	check_balance = true;
 +}
-diff -up rspamd-4.0.1/conf/modules.d/dkim_signing.conf.1~ rspamd-4.0.1/conf/modules.d/dkim_signing.conf
---- rspamd-4.0.1/conf/modules.d/dkim_signing.conf.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/modules.d/dkim_signing.conf	2026-04-07 21:49:04.737365394 +0200
+diff -up rspamd-4.1.1/conf/modules.d/dkim_signing.conf.1~ rspamd-4.1.1/conf/modules.d/dkim_signing.conf
+--- rspamd-4.1.1/conf/modules.d/dkim_signing.conf.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/modules.d/dkim_signing.conf	2026-06-20 17:55:35.775745447 +0200
 @@ -32,7 +32,7 @@ dkim_signing {
    # If true, username does not need to contain matching domain
    allow_username_mismatch = false;
@@ -43,9 +43,9 @@ diff -up rspamd-4.0.1/conf/modules.d/dkim_signing.conf.1~ rspamd-4.0.1/conf/modu
    # Default selector to use
    selector = "dkim";
    # If false, messages from authenticated users are not selected for signing
-diff -up rspamd-4.0.1/conf/modules.d/greylist.conf.1~ rspamd-4.0.1/conf/modules.d/greylist.conf
---- rspamd-4.0.1/conf/modules.d/greylist.conf.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/modules.d/greylist.conf	2026-04-07 21:49:04.737425465 +0200
+diff -up rspamd-4.1.1/conf/modules.d/greylist.conf.1~ rspamd-4.1.1/conf/modules.d/greylist.conf
+--- rspamd-4.1.1/conf/modules.d/greylist.conf.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/modules.d/greylist.conf	2026-06-20 17:57:11.877469362 +0200
 @@ -19,8 +19,10 @@ greylist {
      "$LOCAL_CONFDIR/local.d/maps.d/greylist-whitelist-domains.inc",
    ];
@@ -53,12 +53,12 @@ diff -up rspamd-4.0.1/conf/modules.d/greylist.conf.1~ rspamd-4.0.1/conf/modules.
 +  servers = "/run/redis/rspamd-temp/redis.sock";
 +  enabled = true;
    expire = 1d; # 1 day by default
--  timeout = 5min; # 5 minutes by default
-+  timeout = 3min; # 3 minutes by default
+-  timeout = 5min; # greylisting period (how long to greylist a new sender)
++  timeout = 3min; # greylisting period (how long to greylist a new sender)
+   #redis_timeout = 1.0; # Redis connection timeout in seconds
    key_prefix = "rg"; # default hash name
    max_data_len = 10k; # default data limit to hash
-   message = "Try again later"; # default greylisted message
-@@ -28,6 +30,7 @@ greylist {
+@@ -29,6 +31,7 @@ greylist {
    action = "soft reject"; # default greylisted action
    ipv4_mask = 19; # Mask bits for ipv4
    ipv6_mask = 64; # Mask bits for ipv6
@@ -66,9 +66,9 @@ diff -up rspamd-4.0.1/conf/modules.d/greylist.conf.1~ rspamd-4.0.1/conf/modules.
  
    .include(try=true,priority=5) "${DBDIR}/dynamic/greylist.conf"
    .include(try=true,priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/greylist.conf"
-diff -up rspamd-4.0.1/conf/modules.d/ratelimit.conf.1~ rspamd-4.0.1/conf/modules.d/ratelimit.conf
---- rspamd-4.0.1/conf/modules.d/ratelimit.conf.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/modules.d/ratelimit.conf	2026-04-07 21:49:04.737490815 +0200
+diff -up rspamd-4.1.1/conf/modules.d/ratelimit.conf.1~ rspamd-4.1.1/conf/modules.d/ratelimit.conf
+--- rspamd-4.1.1/conf/modules.d/ratelimit.conf.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/modules.d/ratelimit.conf	2026-06-20 17:55:35.776164872 +0200
 @@ -13,6 +13,37 @@
  # Module documentation can be found at  https://rspamd.com/doc/modules/ratelimit.html
  
@@ -107,9 +107,9 @@ diff -up rspamd-4.0.1/conf/modules.d/ratelimit.conf.1~ rspamd-4.0.1/conf/modules
    #rates {
      # Predefined ratelimit
      #to = {
-diff -up rspamd-4.0.1/conf/modules.d/redis.conf.1~ rspamd-4.0.1/conf/modules.d/redis.conf
---- rspamd-4.0.1/conf/modules.d/redis.conf.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/modules.d/redis.conf	2026-04-07 21:49:04.737085141 +0200
+diff -up rspamd-4.1.1/conf/modules.d/redis.conf.1~ rspamd-4.1.1/conf/modules.d/redis.conf
+--- rspamd-4.1.1/conf/modules.d/redis.conf.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/modules.d/redis.conf	2026-06-20 17:55:35.776305644 +0200
 @@ -13,6 +13,7 @@
  # See https://rspamd.com/doc/configuration/redis.html
  
@@ -118,9 +118,9 @@ diff -up rspamd-4.0.1/conf/modules.d/redis.conf.1~ rspamd-4.0.1/conf/modules.d/r
    #servers = "127.0.0.1"; # Read servers (unless write_servers are unspecified)
    #servers = "master-slave:127.0.0.1,10.0.1.1";
    #write_servers = "127.0.0.1"; # Servers to write data
-diff -up rspamd-4.0.1/conf/options.inc.1~ rspamd-4.0.1/conf/options.inc
---- rspamd-4.0.1/conf/options.inc.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/options.inc	2026-04-07 21:49:04.737159722 +0200
+diff -up rspamd-4.1.1/conf/options.inc.1~ rspamd-4.1.1/conf/options.inc
+--- rspamd-4.1.1/conf/options.inc.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/options.inc	2026-06-20 17:55:35.776454486 +0200
 @@ -15,7 +15,7 @@
  
  filters = "chartable,dkim,regexp,fuzzy_check";
@@ -139,15 +139,15 @@ diff -up rspamd-4.0.1/conf/options.inc.1~ rspamd-4.0.1/conf/options.inc
  
  # Timeout for messages processing (must be larger than any internal timeout used)
  task_timeout = 8s;
-diff -up rspamd-4.0.1/conf/rspamd.conf.1~ rspamd-4.0.1/conf/rspamd.conf
---- rspamd-4.0.1/conf/rspamd.conf.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/rspamd.conf	2026-04-07 21:49:04.737558316 +0200
-@@ -39,21 +39,24 @@ logging {
- }
- 
- worker "normal" {
--    bind_socket = "localhost:11333";
-+    #bind_socket = "localhost:11333";
+diff -up rspamd-4.1.1/conf/rspamd.conf.1~ rspamd-4.1.1/conf/rspamd.conf
+--- rspamd-4.1.1/conf/rspamd.conf.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/rspamd.conf	2026-06-20 18:47:36.202441765 +0200
+@@ -46,21 +46,24 @@ worker "normal" {
+     # Production default is localhost:11333; the functional test harness
+     # exports RSPAMD_PORT_NORMAL (and optionally RSPAMD_LOCAL_ADDR) so the
+     # same template binds the per-worker port under parallel pabot.
+-    bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_NORMAL|default('11333') =}";
++    #bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_NORMAL|default('11333') =}";
 +    bind_socket = "/run/rspamd/normal.sock";
      .include "$CONFDIR/worker-normal.inc"
      .include(try=true; priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/worker-normal.inc"
@@ -155,8 +155,8 @@ diff -up rspamd-4.0.1/conf/rspamd.conf.1~ rspamd-4.0.1/conf/rspamd.conf
  }
  
  worker "controller" {
--    bind_socket = "localhost:11334";
-+    #bind_socket = "localhost:11334";
+-    bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_CONTROLLER|default('11334') =}";
++    #bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_CONTROLLER|default('11334') =}";
 +    bind_socket = "/run/rspamd/controller.sock";
      .include "$CONFDIR/worker-controller.inc"
      .include(try=true; priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/worker-controller.inc"
@@ -164,25 +164,25 @@ diff -up rspamd-4.0.1/conf/rspamd.conf.1~ rspamd-4.0.1/conf/rspamd.conf
  }
  
  worker "rspamd_proxy" {
--    bind_socket = "localhost:11332";
-+    #bind_socket = "localhost:11332";
+-    bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_PROXY|default('11332') =}";
++    #bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_PROXY|default('11332') =}";
 +    bind_socket = "/run/rspamd/proxy.sock mode=0666";
      .include "$CONFDIR/worker-proxy.inc"
      .include(try=true; priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/worker-proxy.inc"
      .include(try=true; priority=10) "$LOCAL_CONFDIR/override.d/worker-proxy.inc"
-@@ -62,7 +65,8 @@ worker "rspamd_proxy" {
+@@ -69,7 +72,8 @@ worker "rspamd_proxy" {
  # Local fuzzy storage is disabled by default
  
  worker "fuzzy" {
--    bind_socket = "localhost:11335";
-+    #bind_socket = "localhost:11335";
+-    bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_FUZZY|default('11335') =}";
++    #bind_socket = "{= env.LOCAL_ADDR|default('localhost') =}:{= env.PORT_FUZZY|default('11335') =}";
 +    bind_socket = "/run/rspamd/fuzzy.sock";
      count = -1; # Disable by default, see #4677 for details
      .include "$CONFDIR/worker-fuzzy.inc"
      .include(try=true; priority=1,duplicate=merge) "$LOCAL_CONFDIR/local.d/worker-fuzzy.inc"
-diff -up rspamd-4.0.1/conf/worker-proxy.inc.1~ rspamd-4.0.1/conf/worker-proxy.inc
---- rspamd-4.0.1/conf/worker-proxy.inc.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/conf/worker-proxy.inc	2026-04-07 22:00:04.660173089 +0200
+diff -up rspamd-4.1.1/conf/worker-proxy.inc.1~ rspamd-4.1.1/conf/worker-proxy.inc
+--- rspamd-4.1.1/conf/worker-proxy.inc.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/conf/worker-proxy.inc	2026-06-20 17:55:35.779270381 +0200
 @@ -24,7 +24,7 @@ timeout = 60s;
  
  upstream "local" {
@@ -192,9 +192,9 @@ diff -up rspamd-4.0.1/conf/worker-proxy.inc.1~ rspamd-4.0.1/conf/worker-proxy.in
  
    # Token bucket load balancing: distributes load based on message size
    # and current backend utilization (useful with multiple backends)
-diff -up rspamd-4.0.1/rspamd.service.1~ rspamd-4.0.1/rspamd.service
---- rspamd-4.0.1/rspamd.service.1~	2026-04-05 20:56:32.000000000 +0200
-+++ rspamd-4.0.1/rspamd.service	2026-04-07 21:49:04.737225203 +0200
+diff -up rspamd-4.1.1/rspamd.service.1~ rspamd-4.1.1/rspamd.service
+--- rspamd-4.1.1/rspamd.service.1~	2026-06-19 16:57:05.000000000 +0200
++++ rspamd-4.1.1/rspamd.service	2026-06-20 17:55:35.779451914 +0200
 @@ -1,6 +1,8 @@
  [Unit]
  Description=rapid spam filtering system
