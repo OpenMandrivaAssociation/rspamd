@@ -1,0 +1,15 @@
+/var/log/rspamd/*.log {
+	su rspamd rspamd
+	daily
+	rotate 14
+	maxsize 50M
+	missingok
+	notifempty
+	compress
+	delaycompress
+	sharedscripts
+	create 0640 rspamd rspamd
+	postrotate
+		/usr/bin/systemctl kill --signal=USR1 --kill-who=main rspamd.service >/dev/null 2>&1 || :
+	endscript
+}

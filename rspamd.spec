@@ -14,7 +14,7 @@
 Summary:	Rapid spam filtering system
 Name:		rspamd
 Version:	4.1.5
-Release:	1
+Release:	2
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
@@ -23,7 +23,9 @@ Source1:	%{name}.sysusers
 # Redis instance setups
 Source2:	rspamd-temp.conf
 Source3:	rspamd-permanent.conf
+Source4:	%{name}.logrotate
 Patch0:		rspamd-omv-config.patch
+Patch1:		rspamd-redis-log-ratelimit.patch
 BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(libevent)
 BuildRequires:	pkgconfig(libcrypto)
@@ -101,6 +103,7 @@ install -p -D -d -m 0755 %{buildroot}%{_sysconfdir}/%{name}/override.d/
 sed -i -e 's,^User=.*,User=%{rspamd_user},g' %{buildroot}%{_unitdir}/%{name}.service
 
 install -Dm 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/rspamd.conf
+install -Dm 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/logrotate.d/rspamd
 
 mkdir -p %{buildroot}%{_tmpfilesdir}
 cat >%{buildroot}%{_tmpfilesdir}/rspamd.conf <<'EOF'
@@ -117,6 +120,7 @@ install -c -m 640 %{S:2} %{S:3} %{buildroot}%{_sysconfdir}/redis/
 %files
 %config %attr(0640, root, redis) %{_sysconfdir}/redis/rspamd-temp.conf
 %config %attr(0640, root, redis) %{_sysconfdir}/redis/rspamd-permanent.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/rspamd
 %{_unitdir}/%{name}.service
 %{_mandir}/man8/%{name}.*
 %{_mandir}/man1/rspamc.*

@@ -1,0 +1,127 @@
+--- rspamd-4.1.5.orig/lualib/lua_redis.lua	2026-08-15 12:50:53.000000000 +0200
++++ rspamd-4.1.5/lualib/lua_redis.lua	2026-08-25 18:08:09.600009358 +0200
+@@ -1416,6 +1416,18 @@ local function prepare_redis_call(script
+     servers = lutil.table_merge(servers, script.redis_params.write_servers:all_upstreams())
+   end
+ 
++  -- read_servers and write_servers are often the same list; uploading twice
++  -- doubles the connection-refused noise when Redis is down.
++  local seen = {}
++  local unique = {}
++  for _, s in ipairs(servers) do
++    if not seen[s] then
++      seen[s] = true
++      unique[#unique + 1] = s
++    end
++  end
++  servers = unique
++
+   -- Call load script on each server, set loaded flag
+   if not script.servers_ready then
+     script.servers_ready = { } -- possible values for each server: unsent, tempfail, failed, done
+@@ -1491,6 +1503,31 @@ local function script_description(script
+       or ("with id: " .. script.id)
+ end
+ 
++-- When Redis is down, every worker retries script upload on a timer and again
++-- on every scanned message. Log the first failure and then at most once a
++-- minute so a missing Redis cannot fill the disk.
++local SCRIPT_ISSUE_LOG_INTERVAL = 60
++
++local function log_script_issue(ctx, script, fmt, ...)
++  local now = os.time()
++  script.issue_suppressed = (script.issue_suppressed or 0) + 1
++  if script.last_issue_log and (now - script.last_issue_log) < SCRIPT_ISSUE_LOG_INTERVAL then
++    return
++  end
++  local extra = ''
++  if script.last_issue_log and script.issue_suppressed > 1 then
++    extra = string.format(' (%d similar messages suppressed)', script.issue_suppressed - 1)
++  end
++  script.last_issue_log = now
++  script.issue_suppressed = 0
++  logger.infox(ctx, fmt .. extra, ...)
++end
++
++local function clear_script_issue(script)
++  script.last_issue_log = nil
++  script.issue_suppressed = 0
++end
++
+ local function load_script_task(script, task, is_write)
+   local rspamd_redis = require "rspamd_redis"
+   local opts = prepare_redis_call(script)
+@@ -1513,7 +1550,8 @@ local function load_script_task(script,
+             return
+           else
+             -- Assume temporary error
+-            logger.infox(task, 'temporary error uploading script %s to %s: %s; registered from: %s:%s',
++            log_script_issue(task, script,
++                'temporary error uploading script %s to %s: %s; registered from: %s:%s',
+                 script_description(script),
+                 opt.upstream:get_addr():to_string(true),
+                 err, script.caller.short_src, script.caller.currentline)
+@@ -1522,6 +1560,7 @@ local function load_script_task(script,
+           end
+         else
+           opt.upstream:ok()
++          clear_script_issue(script)
+           logger.infox(task,
+               "uploaded redis script to %s %s, sha: %s",
+               opt.upstream:get_addr():to_string(true),
+@@ -1576,7 +1615,8 @@ local function load_script_taskless(scri
+             script.servers_ready[idx] = "failed"
+           else
+             -- Assume temporary error
+-            logger.infox(cfg, 'temporary error uploading script %s to %s: %s; registered from: %s:%s',
++            log_script_issue(cfg, script,
++                'temporary error uploading script %s to %s: %s; registered from: %s:%s',
+                 script_description(script),
+                 opt.upstream:get_addr():to_string(true),
+                 err, script.caller.short_src, script.caller.currentline)
+@@ -1584,6 +1624,7 @@ local function load_script_taskless(scri
+           end
+         else
+           opt.upstream:ok()
++          clear_script_issue(script)
+           logger.infox(cfg,
+               "uploaded redis script %s to %s, sha: %s",
+               script_description(script),
+@@ -1732,7 +1773,7 @@ local function exec_redis_script(id, par
+         if can_reload then
+           table.insert(script.waitq, do_call)
+           if not script.pending_upload then
+-            logger.infox(params.task or rspamd_config,
++            log_script_issue(params.task or rspamd_config, script,
+                 'redis script %s is not loaded (NOSCRIPT returned), scheduling reload',
+                 script_description(script))
+             script.sha = nil
+@@ -1749,7 +1790,7 @@ local function exec_redis_script(id, par
+               load_script_taskless(script, rspamd_config, params.ev_base)
+             end
+           else
+-            logger.infox(params.task or rspamd_config,
++            log_script_issue(params.task or rspamd_config, script,
+                 'redis script %s is not ready (NOSCRIPT returned), waiting it to be loaded',
+                 script_description(script))
+           end
+@@ -1800,7 +1841,8 @@ local function exec_redis_script(id, par
+     table.insert(script.waitq, do_call)
+     if not script.servers_ready then
+       -- Delayed until scripts are loaded
+-      logger.infox(params.task or rspamd_config, 'redis script %s is not loaded, trying to load',
++      log_script_issue(params.task or rspamd_config, script,
++          'redis script %s is not loaded, trying to load',
+           script_description(script))
+       -- Reload scripts if this has not been initiated yet
+       if params.task then
+@@ -1810,7 +1852,8 @@ local function exec_redis_script(id, par
+       end
+     else
+       -- Already loaded, but not yet ready
+-      logger.infox(params.task or rspamd_config, 'redis script %s is not ready, waiting it to be loaded',
++      log_script_issue(params.task or rspamd_config, script,
++          'redis script %s is not ready, waiting it to be loaded',
+           script_description(script))
+     end
+   end
