@@ -13,12 +13,12 @@
 
 Summary:	Rapid spam filtering system
 Name:		rspamd
-Version:	4.2.3
-Release:	2
+Version:	4.3.0
+Release:	1
 Group:		System/Servers
 License:	BSD-2-Clause
 URL:		https://rspamd.com/
-Source0:	https://github.com/vstakhov/rspamd/archive/%{version}.tar.gz
+Source0:	https://github.com/rspamd/rspamd/archive/%{version}.tar.gz
 Source1:	%{name}.sysusers
 # Redis instance setups
 Source2:	rspamd-temp.conf
